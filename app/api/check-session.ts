@@ -1,4 +1,4 @@
-// app/api/check-session.ts
+
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '@lib/supabase/server';
@@ -13,7 +13,13 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'User authenticated', user: session.user });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: error.message ?? 'Unknown error' }, { status: 500 });
+  } catch (error: unknown) {
+    // Check if the error is an instance of Error
+    if (error instanceof Error) {
+      return NextResponse.json({ success: false, message: error.message ?? 'Unknown error' }, { status: 500 });
+    } else {
+      // If it's not an instance of Error, handle it as a generic error
+      return NextResponse.json({ success: false, message: 'Unknown error' }, { status: 500 });
+    }
   }
 }
