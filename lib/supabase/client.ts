@@ -78,7 +78,7 @@
 
 
 
-// lib/supabase/client.ts
+
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -89,9 +89,15 @@ export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
 // Function to get session (for client-side)
 export const getSession = async () => {
-  const session = supabaseClient.auth.session();
+  const { data: { session }, error } = await supabaseClient.auth.getSession();
+  
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return session;
 }
+
 
 
 
