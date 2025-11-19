@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@lib/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error || !session) {
